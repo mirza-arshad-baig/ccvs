@@ -21,6 +21,9 @@ func init() {
 	// ConfigPaths is config file paths
 	libs.InitConfig("./config")
 
+	// ===========================================================================
+	// Load Banned Countries List Config
+	// ===========================================================================
 	libs.ConfigFile = "banned_countries"
 	libs.InitConfig("./config")
 	viper.GetStringSlice("banned_countries")
