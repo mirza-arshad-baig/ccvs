@@ -1,10 +1,16 @@
 package services
 
 import (
+	"ccvs/common/utils"
 	"ccvs/data"
 	"ccvs/model"
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
+	"net/http"
+
+	"github.com/spf13/viper"
 )
 
 type CreditCardData struct {
@@ -19,7 +25,27 @@ func (cd *CreditCardData) AddCreditCard(ctx context.Context, addCreditCardReq mo
 	if addCreditCardReq.Name == "" || addCreditCardReq.Number == "" || addCreditCardReq.Country == "" {
 		return errors.New("credit card holder name / number / country can't be blank")
 	}
-	err := cd.Datastore.AddCreditCard(ctx, addCreditCardReq)
+
+	// retrive country name by credit card number
+	countryName, err := VerifyCountry(addCreditCardReq.Number)
+	if err != nil {
+		return err
+	}
+
+	// check if country not banned
+	if viper.GetBool(countryName) {
+		return errors.New("the card is issued in a list of banned countries")
+	}
+
+	ccData, err := cd.Datastore.GetCreditCardByCCNumber(ctx, addCreditCardReq.Number)
+	if err != nil {
+		return err
+	}
+	if ccData.ID != "" {
+		return errors.New("credit card already exist")
+	}
+
+	err = cd.Datastore.AddCreditCard(ctx, addCreditCardReq)
 	if err != nil {
 		return err
 	}
@@ -45,4 +71,30 @@ func (cd *CreditCardData) GetCreditCards(ctx context.Context) ([]model.CreditCar
 	}
 
 	return ccDatas, nil
+}
+
+func VerifyCountry(cardNumber string) (string, error) {
+	bin, err := utils.ExtractBin(cardNumber)
+	if err != nil {
+		return "", err
+	}
+
+	url := fmt.Sprintf("https://lookup.binlist.net/%s", bin)
+	response, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("Failed to fetch BIN information. Status code: %d", response.StatusCode)
+	}
+
+	var binResponse model.BinLookupResponse
+	err = json.NewDecoder(response.Body).Decode(&binResponse)
+	if err != nil {
+		return "", err
+	}
+
+	return binResponse.Country.Name, nil
 }

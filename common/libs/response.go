@@ -1,22 +1,25 @@
 package libs
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
+
+type SuccessResponse struct {
+	Code int         `json:"code"`
+	Data interface{} `json:"data,omitempty"`
+}
 
 type ErrorResp struct {
 	Error string `json:"error"`
 }
 
 // BuildResponse will build the json response for webservices
-func BuildResponse(c *gin.Context, data interface{}, err error) {
+func BuildResponse(c *gin.Context, httpStatus int, data interface{}, err error) {
 	if err == nil {
-		c.JSON(http.StatusOK, data)
+		c.JSON(httpStatus, SuccessResponse{Data: data, Code: httpStatus})
 	} else {
 		log.Errorf("Error: %s", err.Error())
-		c.JSON(http.StatusInternalServerError, ErrorResp{Error: err.Error()})
+		c.JSON(httpStatus, ErrorResp{Error: err.Error()})
 	}
 }

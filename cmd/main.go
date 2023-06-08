@@ -20,6 +20,10 @@ func init() {
 	libs.ConfigFile = "app"
 	// ConfigPaths is config file paths
 	libs.InitConfig("./config")
+
+	libs.ConfigFile = "banned_countries"
+	libs.InitConfig("./config")
+	viper.GetStringSlice("banned_countries")
 }
 
 func main() {

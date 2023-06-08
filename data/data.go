@@ -9,4 +9,5 @@ type ICreditCardData interface {
 	AddCreditCard(ctx context.Context, addCreditCardReq model.AddCreditCardReq) error
 	GetCreditCard(ctx context.Context, creditCardID string) (model.CreditCard, error)
 	GetCreditCards(ctx context.Context) ([]model.CreditCard, error)
+	GetCreditCardByCCNumber(ctx context.Context, ccNumber string) (model.CreditCard, error)
 }
