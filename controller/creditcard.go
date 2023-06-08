@@ -3,6 +3,7 @@ package controller
 import (
 	"ccvs/model"
 	"ccvs/services"
+	"eaciit/ccvs/common/libs"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,19 +20,25 @@ func NewCreditCardControllers(s services.ICreditCard) *CreditCardControllers {
 func (c *CreditCardControllers) AddCreditCard(ctx *gin.Context) {
 	var (
 		cdReq model.AddCreditCardReq
+		err   error
 	)
-	err := ctx.BindJSON(&cdReq)
+	err = ctx.BindJSON(&cdReq)
 	if err == nil {
 		err = c.dataService.AddCreditCard(ctx, cdReq)
 	}
+	libs.BuildResponse(ctx, nil, err)
 }
 
 // GetCreditCard: get credit card details by ID
 func (c *CreditCardControllers) GetCreditCard(ctx *gin.Context) {
+	creditCardID := ctx.Param("id")
+	creditCardData, err := c.dataService.GetCreditCard(ctx, creditCardID)
+	libs.BuildResponse(ctx, creditCardData, err)
 
 }
 
 // GetCreditCards: get all credit card details
 func (c *CreditCardControllers) GetCreditCards(ctx *gin.Context) {
-
+	creditCardData, err := c.dataService.GetCreditCards(ctx)
+	libs.BuildResponse(ctx, creditCardData, err)
 }

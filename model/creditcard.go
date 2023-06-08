@@ -1,16 +1,14 @@
 package model
 
 type AddCreditCardReq struct {
-	Name      string
-	Number    string
-	Country   string
-	ValidUpto string
+	Name    string `json:"name"`
+	Number  string `json:"credit_card_number"`
+	Country string `json:"country"`
 }
 
 type CreditCard struct {
-	ID        string
-	Name      string
-	Number    string
-	Country   string
-	ValidUpto string
+	ID      string `json:"id"`
+	Name    string `json:"name"`
+	Number  string `json:"credit_card_number"`
+	Country string `json:"country"`
 }

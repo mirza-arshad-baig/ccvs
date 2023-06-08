@@ -1,12 +1,5 @@
 {
     "app": {
         "address": "localhost:8080"
-    },
-    "credit_card_db" : {
-        "username":"",
-        "password":"",
-        "host":"",
-        "port":"",
-        "database_name":""
     }
 }
