@@ -1,14 +1,17 @@
-package db
+package sql
 
 import (
 	"database/sql"
+	"fmt"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
 var (
 	CreditCardDB *sql.DB
+	err          error
 )
 
 func GetDbInstance() *sql.DB {
@@ -19,7 +22,7 @@ func GetDbInstance() *sql.DB {
 	databaseName := viper.GetString("credit_card_db.database_name")
 
 	//Initialized DB
-	CreditCardDB, err := sql.Open("mysql", userName+":"+password+"@tcp("+host+":"+port+")/"+databaseName)
+	CreditCardDB, err = sql.Open("mysql", userName+":"+password+"@tcp("+host+":"+port+")/"+databaseName)
 	if err != nil {
 		logrus.Fatal(err)
 		return CreditCardDB
@@ -30,7 +33,6 @@ func GetDbInstance() *sql.DB {
 	err = CreditCardDB.Ping()
 	if err != nil {
 		logrus.Fatal(err)
-		return CreditCardDB
 	}
 	return CreditCardDB
 }

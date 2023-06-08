@@ -1,9 +1,9 @@
 package controller
 
 import (
+	"ccvs/common/libs"
 	"ccvs/model"
 	"ccvs/services"
-	"eaciit/ccvs/common/libs"
 
 	"github.com/gin-gonic/gin"
 )
