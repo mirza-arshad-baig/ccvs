@@ -1,0 +1,83 @@
+{
+	"info": {
+		"_postman_id": "3c6a286b-4a40-467a-a6a4-ed19de574c7d",
+		"name": "credit-card-validation-system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27716844"
+	},
+	"item": [
+		{
+			"name": "credit-card/getall",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/credit-card/getall",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"credit-card",
+						"getall"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "credit-card/get/:id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/credit-card/get/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"credit-card",
+						"get",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "credit-card/add",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"credit_card_number\": \"4591150110326478\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/credit-card/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"credit-card",
+						"add"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

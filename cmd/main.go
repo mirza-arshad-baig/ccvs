@@ -26,7 +26,6 @@ func init() {
 	// ===========================================================================
 	libs.ConfigFile = "banned_countries"
 	libs.InitConfig("./config")
-	viper.GetStringSlice("banned_countries")
 }
 
 func main() {

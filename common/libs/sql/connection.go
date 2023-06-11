@@ -27,11 +27,11 @@ func GetDbInstance() *sql.DB {
 		logrus.Fatal(err)
 		return CreditCardDB
 	}
-	defer CreditCardDB.Close()
 
 	// Open doesn't open a connection, so we need to ping it to make sure the connection is established
 	err = CreditCardDB.Ping()
 	if err != nil {
+		fmt.Println("=====================", userName, " = ", password, " = ", host, " = ", port, " = ", databaseName)
 		logrus.Fatal(err)
 	}
 	return CreditCardDB

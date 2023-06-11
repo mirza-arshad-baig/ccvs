@@ -11,14 +11,13 @@ type DB struct {
 }
 
 func (d DB) AddCreditCard(ctx context.Context, addCreditCardReq model.AddCreditCardReq) error {
-	sqlstr := "INSERT INTO credit_cards SET name = ? , card_number = ?, country = ?"
+	sqlstr := "INSERT INTO credit_cards SET card_number = ?, country = ?"
 
 	stmt, err := d.CreditCardData.Prepare(sqlstr)
 	if err != nil {
 		return err
 	}
 	_, err = stmt.Exec(
-		addCreditCardReq.Name,
 		addCreditCardReq.Number,
 		addCreditCardReq.Country,
 	)
@@ -32,8 +31,8 @@ func (d DB) AddCreditCard(ctx context.Context, addCreditCardReq model.AddCreditC
 func (d DB) GetCreditCard(ctx context.Context, creditCardID string) (model.CreditCard, error) {
 	var ccData model.CreditCard
 
-	sqlStr := `SELECT id, card_number, name, country FROM credit_cards WHERE id = ?`
-	err := d.CreditCardData.QueryRow(sqlStr, creditCardID).Scan(&ccData.ID, &ccData.Number, &ccData.Name, &ccData.Country)
+	sqlStr := `SELECT id, card_number, country FROM credit_cards WHERE id = ?`
+	err := d.CreditCardData.QueryRow(sqlStr, creditCardID).Scan(&ccData.ID, &ccData.Number, &ccData.Country)
 	if sql.ErrNoRows == err {
 		return model.CreditCard{}, nil
 	} else if err != nil {
@@ -44,8 +43,8 @@ func (d DB) GetCreditCard(ctx context.Context, creditCardID string) (model.Credi
 
 func (d DB) GetCreditCards(ctx context.Context) ([]model.CreditCard, error) {
 	var ccDatas []model.CreditCard
-	sqlStr := `SELECT id, card_number, name, country FROM credit_cards`
-	rows, err := d.CreditCardData.Query(sqlStr) //(&ccData)
+	sqlStr := `SELECT id, card_number, country FROM credit_cards`
+	rows, err := d.CreditCardData.Query(sqlStr)
 	if sql.ErrNoRows == err {
 		return []model.CreditCard{}, nil
 	} else if err != nil {
@@ -58,7 +57,6 @@ func (d DB) GetCreditCards(ctx context.Context) ([]model.CreditCard, error) {
 		err := rows.Scan(
 			&ccData.ID,
 			&ccData.Number,
-			&ccData.Name,
 			&ccData.Country,
 		)
 		if err != nil {
@@ -70,8 +68,8 @@ func (d DB) GetCreditCards(ctx context.Context) ([]model.CreditCard, error) {
 }
 
 func (d DB) GetCreditCardByCCNumber(ctx context.Context, ccNumber string) (ccData model.CreditCard, err error) {
-	sqlStr := `SELECT id, card_number, name, country FROM credit_cards WHERE card_number = ?`
-	err = d.CreditCardData.QueryRow(sqlStr, ccNumber).Scan(&ccData.ID, &ccData.Number, &ccData.Name, &ccData.Country)
+	sqlStr := `SELECT id, card_number FROM credit_cards WHERE card_number = ?`
+	err = d.CreditCardData.QueryRow(sqlStr, ccNumber).Scan(&ccData.ID, &ccData.Number)
 	if sql.ErrNoRows == err {
 		return model.CreditCard{}, nil
 	} else if err != nil {

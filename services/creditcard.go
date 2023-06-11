@@ -22,8 +22,8 @@ func NewCreditCardData(data data.ICreditCardData) *CreditCardData {
 }
 
 func (cd *CreditCardData) AddCreditCard(ctx context.Context, addCreditCardReq model.AddCreditCardReq) error {
-	if addCreditCardReq.Name == "" || addCreditCardReq.Number == "" || addCreditCardReq.Country == "" {
-		return errors.New("credit card holder name / number / country can't be blank")
+	if addCreditCardReq.Number == "" {
+		return errors.New("credit number can't be blank")
 	}
 
 	// retrive country name by credit card number
@@ -36,6 +36,10 @@ func (cd *CreditCardData) AddCreditCard(ctx context.Context, addCreditCardReq mo
 	if viper.GetBool(countryName) {
 		return errors.New("the card is issued in a list of banned countries")
 	}
+
+	fmt.Println("countryName:", countryName)
+
+	addCreditCardReq.Country = countryName
 
 	ccData, err := cd.Datastore.GetCreditCardByCCNumber(ctx, addCreditCardReq.Number)
 	if err != nil {
