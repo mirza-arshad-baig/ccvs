@@ -18,6 +18,7 @@ func init() {
 	// Load Environment Config
 	// ===========================================================================
 	libs.ConfigFile = "app"
+
 	// ConfigPaths is config file paths
 	libs.InitConfig("../config")
 

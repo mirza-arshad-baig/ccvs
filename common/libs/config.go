@@ -10,19 +10,22 @@ import (
 )
 
 var (
-
 	//ConfigFile is config file name
 	ConfigFile  string
 	onceWatcher sync.Once
 )
 
-// InitConfig will init server config
+// InitConfig initializes the server configuration.
+// It reads the config file specified by ConfigPath and ConfigFile,
+// logs the initialized configurations, and sets up a config watcher.
 func InitConfig(ConfigPath string) {
 	v, err := ReadConfig(ConfigPath, ConfigFile)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	log.Infoln("Initialized Configurations")
+
+	// Marshal the configurations into a formatted JSON string
 	configs, err := json.MarshalIndent(v.AllSettings(), "", "")
 	if err != nil {
 		log.Infoln("Error:", err)
@@ -30,7 +33,10 @@ func InitConfig(ConfigPath string) {
 	log.Infoln(string(configs))
 }
 
-// ReadConfig will read config files
+// ReadConfig reads the config files located in the specified directory (dir) with the given filename.
+// It sets up the config file name and path using viper, enables automatic environment variable binding,
+// merges the config file into the viper instance, and sets up a watcher for config changes.
+// The function returns the viper instance and any error that occurred during the process.
 func ReadConfig(dir string, filename string) (*viper.Viper, error) {
 	viper.SetConfigName(filename)
 	viper.AddConfigPath(dir)
@@ -41,7 +47,7 @@ func ReadConfig(dir string, filename string) (*viper.Viper, error) {
 		onceWatcher.Do(func() {
 			viper.WatchConfig()
 			viper.OnConfigChange(func(e fsnotify.Event) {
-				//InitConfig()
+				// Handle config changes if needed
 			})
 		})
 	}

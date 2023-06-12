@@ -18,6 +18,7 @@ func init() {
 	// Load Environment Config
 	// ===========================================================================
 	libs.ConfigFile = "app"
+
 	// ConfigPaths is config file paths
 	libs.InitConfig("./config")
 
@@ -48,13 +49,18 @@ func main() {
 	// ===========================================================================
 	app.InitializeRoutes(router)
 
+	// Get the hostname from the app configuration
 	hostname := viper.GetString("app.address")
 	log.Infoln("Serving at", hostname)
+
+	// Create an HTTP server with custom configurations
 	srv := &http.Server{
 		ReadHeaderTimeout: 1 * time.Minute,
 		Addr:              hostname,
 		Handler:           router,
 	}
+
+	// Start listening and serving requests
 	err := srv.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
 		log.Fatalf("listen: %s\n", err)

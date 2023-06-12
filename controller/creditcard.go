@@ -17,7 +17,7 @@ func NewCreditCardControllers(s services.ICreditCard) *CreditCardControllers {
 	return &CreditCardControllers{dataService: s}
 }
 
-// AddCreditCard: AddCreditCard add credit card in DB
+// AddCreditCard adds a credit card to the database.
 func (c *CreditCardControllers) AddCreditCard(ctx *gin.Context) {
 	var (
 		cdReq model.AddCreditCardReq
@@ -33,10 +33,10 @@ func (c *CreditCardControllers) AddCreditCard(ctx *gin.Context) {
 		libs.BuildResponse(ctx, http.StatusInternalServerError, nil, err)
 		return
 	}
-	libs.BuildResponse(ctx, http.StatusOK, nil, err)
+	libs.BuildResponse(ctx, http.StatusOK, "Credit card added successfully", err)
 }
 
-// GetCreditCard: get credit card details by ID
+// GetCreditCard retrieves the credit card details by ID.
 func (c *CreditCardControllers) GetCreditCard(ctx *gin.Context) {
 	creditCardID := ctx.Param("id")
 
@@ -45,12 +45,10 @@ func (c *CreditCardControllers) GetCreditCard(ctx *gin.Context) {
 		libs.BuildResponse(ctx, http.StatusInternalServerError, nil, err)
 		return
 	}
-
 	libs.BuildResponse(ctx, http.StatusOK, creditCardData, err)
-
 }
 
-// GetCreditCards: get all credit card details
+// GetCreditCards retrieves all credit card details.
 func (c *CreditCardControllers) GetCreditCards(ctx *gin.Context) {
 	creditCardData, err := c.dataService.GetCreditCards(ctx)
 	if err != nil {
