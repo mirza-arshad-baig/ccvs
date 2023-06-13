@@ -1,13 +1,15 @@
 package init
 
 import (
-	"ccvs/common/libs/sql"
 	"ccvs/data"
+
+	dataSQL "ccvs/data/sql"
+
+	"github.com/sirupsen/logrus"
 )
 
 var (
-	datastore    data.ICreditCardData
-	creditCardDB data.DB
+	datastore data.ICreditCardData
 )
 
 // InitializeDependencies initializes the dependencies for the application.
@@ -15,13 +17,11 @@ var (
 // gets the DB instance using the GetDbInstance function from the sql package,
 // and sets up the creditCardDB and datastore variables.
 func InitializeDependencies() {
-
-	// Read DB config from app config file (app.json)
-	sql := sql.GetDbInstance()
-
-	// Set up the creditCardDB with the DB instance
-	creditCardDB.CreditCardData = sql
+	creditCard, err := dataSQL.NewSQLCreditCard()
+	if err != nil {
+		logrus.Fatalf("fatal: ", err)
+	}
 
 	// Set the datastore to creditCardDB
-	datastore = creditCardDB
+	datastore = creditCard
 }
